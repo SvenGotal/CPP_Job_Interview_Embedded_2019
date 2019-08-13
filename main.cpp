@@ -20,7 +20,7 @@
 
 static uint8_t* preallocated = new uint8_t[MEMORY_REQ * sizeof(Element<double>)]; // memory location
 
-static Element<double>* lista = new(preallocated) Element<double>[32];	   // allocation to preallocated mem_location
+static Element<double>* lista = new(preallocated) Element<double>[MEMORY_REQ];	   // allocation to preallocated mem_location
 /****************************************************************/
 
 
@@ -45,19 +45,31 @@ int main(){
 	delete lista;
 */
 
-	List<double> lista_lf;
+	List<double> lista_lf; //= new List<double>();
 
-	lista_lf.add_element(3.14);		// Pi
+
+	lista_lf.add_element(3.14);	    // Pi
 	lista_lf.add_element(2.718);	// Euler's number
-	lista_lf.add_element(1.618);	// Golde cut
-	lista_lf.add_element(0.577);	// Euler-Mascheroni constant
-	lista_lf.add_element(1.414);	// sqrt(2) Pythagora
-	lista_lf.add_element(0.280);	// Bernstein's constant
-	lista_lf.add_element(0.5671);	// Omega constant
+	//lista_lf.add_element(1.618);	// Golden cut
+	//lista_lf.add_element(0.577);	// Euler-Mascheroni constant
+	//lista_lf.add_element(1.414);	// sqrt(2) Pythagora
+	//lista_lf.add_element(0.280);	// Bernstein's constant
+	//lista_lf.add_element(0.5671);	// Omega constant
 
-	lista_lf.delete_element(1.414);
+
 
 	std::cout << lista_lf;
+
+
+	//lista_lf->delete_list();
+	lista_lf.delete_list();
+
+	std::cout << "Lista drugi put: \n" << lista_lf;
+
+
+
+
+
 /*
 	List<char> lista2;
 	lista2.add_element('a');

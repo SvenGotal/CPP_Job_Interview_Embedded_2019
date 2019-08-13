@@ -22,14 +22,16 @@
 /****************************************************************
 * Template Element class, these make up the chain for the list
 *****************************************************************/
-template<class T>
-class Element{
-public:
+template<typename T>
+struct Element{
+
 	T element;
 	Element* next;
 
-	Element() { element = 0; next = NULL; }
-	~Element() {  next = nullptr; }
+	Element(); //: next(nullptr) { }
+	Element(T elem, Element* to); // : element(elem), next(to) { }
+	Element(const Element<T>& other); //: element(other.element), next(other.next) {};
+	~Element(); // {  next = nullptr; }
 };
 
 /****************************************************************
@@ -38,20 +40,61 @@ public:
 template<class N>
 class List{
 	Element<N>* first;
-	unsigned size;
+	uint8_t size;
 
 public:
 
 	/****************************************************************
 	* Constructors and Destructors
 	*****************************************************************/
-	List() { size = 0; first = nullptr; };
+	List() : first(nullptr), size(0) {}
+
 	/* Constructor with input - for memory preallocation */
-	List(Element<N>* mem_destination){ size = 0; first = mem_destination; };
-	~List(){ delete first; }
+	List(Element<N>* mem_destination) : size(0), first(mem_destination)	{}
+
+	List(const List<N>& other) : first(nullptr), size(other.size)
+	{
+		Element<N>* iter = other.first;
+
+
+		while(iter != nullptr)
+		{
+
+			Element<N>* newNode = new Element<N>();
+			newNode->element = iter->element;
+			newNode->next = first;
+
+			first = newNode;
+			iter = iter->next;
+		}
+
+	}
+
+	~List(){ delete_list(); }
+
 
 	/****************************************************************
-	* Adds a new element onto the list - Last In First Out
+	* deletes the list
+	*****************************************************************/
+	void delete_list()
+	{
+
+		Element<N>* iter;
+		size = 0;
+
+		while(first != nullptr)
+		{
+
+			iter = first->next;
+			delete first;
+			first = iter;
+
+		}
+
+	}
+
+	/****************************************************************
+	* Adds a new element onto the list
 	*****************************************************************/
 	void add_element(const N value){
 		/* create new node */
@@ -61,11 +104,12 @@ public:
 		newNode->element = value;
 		newNode->next = this->first;
 
-		/* Put the newNode on the first place on the list - LIFO */
+		/* Put the newNode on the first place on the list */
 		this->first = newNode;
 
 		/* Increase the size count for each new element */
 		size++;
+		newNode = nullptr;
 	}
 
 	/****************************************************************
@@ -119,7 +163,7 @@ public:
 	*****************************************************************/
 	Element<N>* find_element(const N value){
 		/* Iterator */
-		Element<N>* iter;
+		Element<N>* iter = first;
 
 		/* Search through the list O(n) */
 		while(iter != NULL){
@@ -128,6 +172,7 @@ public:
 			iter = iter->next;
 		}
 		/* In case none are found */
+		iter = nullptr;
 		return NULL;
 	}
 
@@ -141,8 +186,11 @@ public:
 			os << iter->element << std::endl;
 			iter = iter->next;
 		}
+		if(iter != nullptr)
+			iter = nullptr;
 		return os;
 	}
+
 
 };
 
