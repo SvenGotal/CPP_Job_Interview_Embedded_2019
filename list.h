@@ -2,7 +2,7 @@
  * list.h
  *
  *  Created on: Jul 27, 2019
- *      Author: Sven
+ *      Author: Sven Gotal
  *
  * Description: Header file for custom, Singly-Linked-List
  * 				- fur die CETiTec interview
@@ -37,7 +37,7 @@ struct Element{
 /****************************************************************
 * Template List class
 *****************************************************************/
-template<class N>
+template<typename N>
 class List{
 	Element<N>* first;
 	uint8_t size;
@@ -47,148 +47,49 @@ public:
 	/****************************************************************
 	* Constructors and Destructors
 	*****************************************************************/
-	List() : first(nullptr), size(0) {}
-
+	List();
 	/* Constructor with input - for memory preallocation */
-	List(Element<N>* mem_destination) : size(0), first(mem_destination)	{}
-
-	List(const List<N>& other) : first(nullptr), size(other.size)
-	{
-		Element<N>* iter = other.first;
-
-
-		while(iter != nullptr)
-		{
-
-			Element<N>* newNode = new Element<N>();
-			newNode->element = iter->element;
-			newNode->next = first;
-
-			first = newNode;
-			iter = iter->next;
-		}
-
-	}
-
-	~List(){ delete_list(); }
+	List(Element<N>* mem_destination);
+	List(const List<N>& other);
+	~List();
 
 
 	/****************************************************************
 	* deletes the list
 	*****************************************************************/
-	void delete_list()
-	{
-
-		Element<N>* iter;
-		size = 0;
-
-		while(first != nullptr)
-		{
-
-			iter = first->next;
-			delete first;
-			first = iter;
-
-		}
-
-	}
+	void delete_list();
 
 	/****************************************************************
 	* Adds a new element onto the list
 	*****************************************************************/
-	void add_element(const N value){
-		/* create new node */
-		Element<N> *newNode = new Element<N>();
-
-		/* Initialize newNode */
-		newNode->element = value;
-		newNode->next = this->first;
-
-		/* Put the newNode on the first place on the list */
-		this->first = newNode;
-
-		/* Increase the size count for each new element */
-		size++;
-		newNode = nullptr;
-	}
+	void add_element(const N value);
 
 	/****************************************************************
 	* Delete element method - Deletes only one and first found corresponding value
 	*****************************************************************/
-	void delete_element(const N value){
-		/* 2 x Iterator | previous is required in order
-		 * to set a link over the gap in the list */
-		Element<N>* iter, *previous;
-
-		/* Previous - first | iter - second iterator */
-		previous = this->first;
-		iter = previous->next;
-
-		while(iter != NULL && previous != NULL){
-
-			/* In case the first element in a row is the value we are
-			 * looking for */
-			if(previous->element == value){
-				if(iter != NULL)
-					this->first = iter;
-				delete previous;
-				break;
-			}
-
-			/* every other case down the link chain
-			 * break the loop in case the target is found */
-			if(iter->element == value){
-				if(iter->next != NULL)
-					previous->next = iter->next;
-				else
-					previous->next = NULL;
-				delete iter;
-				break;
-			}
-
-			/* moving iterators further down the chain */
-			previous = previous->next;
-			iter = previous->next;
-		}
-		/* get rid of dangling pointers */
-		previous = nullptr;
-		iter = nullptr;
-
-		/* decrease the size counter */
-		this->size--;
-	}
+	void delete_element(const N value);
 
 	/****************************************************************
 	* Method that will return pointer to the found element or NULL in other case
 	*****************************************************************/
-	Element<N>* find_element(const N value){
-		/* Iterator */
-		Element<N>* iter = first;
-
-		/* Search through the list O(n) */
-		while(iter != NULL){
-			if(iter->element == value)
-				return iter;
-			iter = iter->next;
-		}
-		/* In case none are found */
-		iter = nullptr;
-		return NULL;
-	}
+	Element<N>* find_element(const N value);
 
 	/****************************************************************
 	* Helper method for printing all of the list elements
 	*****************************************************************/
-	friend std::ostream& operator<< (std::ostream& os, const List lista){
+	friend std::ostream& operator<< (std::ostream& os, const List lista)
+	{
 		Element<N>* iter = lista.first;
-		os << "size: " << lista.size << std::endl;
-		while(iter != NULL){
-			os << iter->element << std::endl;
-			iter = iter->next;
-		}
-		if(iter != nullptr)
-			iter = nullptr;
-		return os;
+			os << "size: " << (unsigned)lista.size << std::endl;
+			while(iter != NULL)
+			{
+				os << iter->element << std::endl;
+				iter = iter->next;
+			}
+			if(iter != nullptr)
+				iter = nullptr;
+
+			return os;
 	}
 
 
